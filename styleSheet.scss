@@ -1,0 +1,60 @@
+$font-type: Arial, sans-serif;
+$font-color: white;
+$bg-color: rgb(110, 107, 122);
+$theme-color: rgb(70, 67, 82);
+$accent-color: rgb(98, 92, 122);
+
+body {
+    font: 12pt $font-type;
+    color: $font-color;
+    background-color: $bg-color;
+    
+
+    header {
+        background-color: $theme-color;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 10;
+        text-align: center;
+        border-bottom: 1px black solid;
+
+        h1 {
+            padding: 20px;
+            margin: 0;
+        }
+
+        nav {
+            width: 100%;
+
+            ul {
+                list-style-type: none;
+                display: flex;
+                justify-content: center;
+                margin: 0;
+                padding: 0;
+
+                li {
+                    display: inline-block;
+                    width: 175px;
+                    a {
+                        text-decoration: none;  
+                        padding: 20px;
+                        color: $font-color;
+                        display: block;
+                    }
+
+                    a:hover {
+                        background-color: $accent-color;    
+                    }
+                }
+            }
+        }
+    }
+
+    main{
+        margin-top: 150px;
+    }
+
+}

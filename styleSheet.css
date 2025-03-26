@@ -1,0 +1,47 @@
+body {
+  font: 12pt Arial, sans-serif;
+  color: white;
+  background-color: rgb(110, 107, 122);
+}
+body header {
+  background-color: rgb(70, 67, 82);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  text-align: center;
+  border-bottom: 1px black solid;
+}
+body header h1 {
+  padding: 20px;
+  margin: 0;
+}
+body header nav {
+  width: 100%;
+}
+body header nav ul {
+  list-style-type: none;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+body header nav ul li {
+  display: inline-block;
+  width: 175px;
+}
+body header nav ul li a {
+  text-decoration: none;
+  padding: 20px;
+  color: white;
+  display: block;
+}
+body header nav ul li a:hover {
+  background-color: rgb(98, 92, 122);
+}
+body main {
+  margin-top: 150px;
+}
+
+/*# sourceMappingURL=styleSheet.css.map */
