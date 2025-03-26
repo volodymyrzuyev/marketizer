@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Project github.com/volodymyrzuyev/marketizer
 
 One Paragraph of project description goes here
@@ -37,3 +38,6 @@ Clean up binary from the last build:
 ```bash
 make clean
 ```
+=======
+# marketizer
+>>>>>>> main
