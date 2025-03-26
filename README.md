@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-# Project github.com/volodymyrzuyev/marketizer
-
-One Paragraph of project description goes here
+# marketizer
 
 ## Getting Started
 
@@ -39,5 +36,3 @@ Clean up binary from the last build:
 make clean
 ```
 =======
-# marketizer
->>>>>>> main
