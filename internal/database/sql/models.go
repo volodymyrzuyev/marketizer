@@ -9,16 +9,18 @@ import (
 )
 
 type Follow struct {
-	ID             interface{}
-	Email          interface{}
+	ID             int64
+	Email          sql.NullInt64
 	MarketHashName sql.NullString
 }
 
 type Item struct {
-	AssetID        interface{}
-	MarketHashName sql.NullString
-	Price          interface{}
-	Time           interface{}
+	AssetID        int64
+	MarketHashName string
+	Price          int64
+	Appid          int64
+	Time           int64
+	Image          string
 }
 
 type User struct {

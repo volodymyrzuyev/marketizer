@@ -9,6 +9,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.13.3
 	github.com/mattn/go-sqlite3 v1.14.24
+	github.com/volodymyrzuyev/steamCommunityMarket v0.0.0-20241217044748-e723b7721086
 )
 
 require (

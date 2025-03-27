@@ -10,6 +10,34 @@ import (
 	"database/sql"
 )
 
+const addAsset = `-- name: AddAsset :exec
+INSERT INTO
+    items (ASSET_ID, MARKET_HASH_NAME, PRICE, APPID, TIME, IMAGE)
+VALUES
+    (?1, ?2, ?3, ?4, ?5, ?6)
+`
+
+type AddAssetParams struct {
+	AssetID        int64
+	MarketHashName string
+	Price          int64
+	Appid          int64
+	Time           int64
+	Image          string
+}
+
+func (q *Queries) AddAsset(ctx context.Context, arg AddAssetParams) error {
+	_, err := q.db.ExecContext(ctx, addAsset,
+		arg.AssetID,
+		arg.MarketHashName,
+		arg.Price,
+		arg.Appid,
+		arg.Time,
+		arg.Image,
+	)
+	return err
+}
+
 const add_User = `-- name: Add_User :exec
 INSERT INTO 
     users (NAME, EMAIL, PASSWORD)
@@ -43,8 +71,8 @@ func (q *Queries) Create_table1(ctx context.Context) error {
 
 const create_table2 = `-- name: Create_table2 :exec
 CREATE TABLE IF NOT EXISTS follows(
-    ID NUMBER PRIMARY KEY,
-    EMAIL NUMBER,
+    ID INTEGER PRIMARY KEY,
+    EMAIL INTEGER,
     MARKET_HASH_NAME TEXT
 )
 `
@@ -56,10 +84,12 @@ func (q *Queries) Create_table2(ctx context.Context) error {
 
 const create_table3 = `-- name: Create_table3 :exec
 CREATE TABLE IF NOT EXISTS items(
-    ASSET_ID NUMBER PRIMARY KEY,
+    ASSET_ID INTEGER PRIMARY KEY,
     MARKET_HASH_NAME TEXT,
-    PRICE NUMBER,
-    TIME NUMBER
+    PRICE INTEGER,
+    APPID INTEGER,
+    TIME INTEGER,
+    IMAGE TEXT NOT NULL
 )
 `
 
