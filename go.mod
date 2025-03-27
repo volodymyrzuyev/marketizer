@@ -5,6 +5,7 @@ go 1.24.1
 require (
 	github.com/a-h/templ v0.3.857
 	github.com/coder/websocket v1.8.13
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.13.3
 	github.com/mattn/go-sqlite3 v1.14.24

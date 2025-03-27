@@ -4,9 +4,25 @@
 
 package custSql
 
+import (
+	"database/sql"
+)
+
+type Follow struct {
+	ID             interface{}
+	Email          interface{}
+	MarketHashName sql.NullString
+}
+
+type Item struct {
+	AssetID        interface{}
+	MarketHashName sql.NullString
+	Price          interface{}
+	Time           interface{}
+}
+
 type User struct {
-	Uid      interface{}
-	Name     interface{}
-	Email    interface{}
-	Password interface{}
+	Name     sql.NullString
+	Email    string
+	Password sql.NullString
 }

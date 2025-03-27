@@ -7,13 +7,72 @@ package custSql
 
 import (
 	"context"
+	"database/sql"
 )
+
+const add_User = `-- name: Add_User :exec
+INSERT INTO 
+    users (NAME, EMAIL, PASSWORD)
+VALUES
+    (?1, ?2, ?3)
+`
+
+type Add_UserParams struct {
+	Name     sql.NullString
+	Email    string
+	Password sql.NullString
+}
+
+func (q *Queries) Add_User(ctx context.Context, arg Add_UserParams) error {
+	_, err := q.db.ExecContext(ctx, add_User, arg.Name, arg.Email, arg.Password)
+	return err
+}
+
+const create_table1 = `-- name: Create_table1 :exec
+CREATE TABLE IF NOT EXISTS users(
+    NAME TEXT,
+    EMAIL TEXT PRIMARY KEY,
+    PASSWORD TEXT
+)
+`
+
+func (q *Queries) Create_table1(ctx context.Context) error {
+	_, err := q.db.ExecContext(ctx, create_table1)
+	return err
+}
+
+const create_table2 = `-- name: Create_table2 :exec
+CREATE TABLE IF NOT EXISTS follows(
+    ID NUMBER PRIMARY KEY,
+    EMAIL NUMBER,
+    MARKET_HASH_NAME TEXT
+)
+`
+
+func (q *Queries) Create_table2(ctx context.Context) error {
+	_, err := q.db.ExecContext(ctx, create_table2)
+	return err
+}
+
+const create_table3 = `-- name: Create_table3 :exec
+CREATE TABLE IF NOT EXISTS items(
+    ASSET_ID NUMBER PRIMARY KEY,
+    MARKET_HASH_NAME TEXT,
+    PRICE NUMBER,
+    TIME NUMBER
+)
+`
+
+func (q *Queries) Create_table3(ctx context.Context) error {
+	_, err := q.db.ExecContext(ctx, create_table3)
+	return err
+}
 
 const get_All_Users = `-- name: Get_All_Users :many
 SELECT
-    uid, name, email, password
+    name, email, password
 FROM
-    USERS
+    users
 `
 
 func (q *Queries) Get_All_Users(ctx context.Context) ([]User, error) {
@@ -25,12 +84,7 @@ func (q *Queries) Get_All_Users(ctx context.Context) ([]User, error) {
 	var items []User
 	for rows.Next() {
 		var i User
-		if err := rows.Scan(
-			&i.Uid,
-			&i.Name,
-			&i.Email,
-			&i.Password,
-		); err != nil {
+		if err := rows.Scan(&i.Name, &i.Email, &i.Password); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -42,4 +96,17 @@ func (q *Queries) Get_All_Users(ctx context.Context) ([]User, error) {
 		return nil, err
 	}
 	return items, nil
+}
+
+const get_User = `-- name: Get_User :one
+SELECT name, email, password
+FROM users
+WHERE EMAIL = ?1
+`
+
+func (q *Queries) Get_User(ctx context.Context, email string) (User, error) {
+	row := q.db.QueryRowContext(ctx, get_User, email)
+	var i User
+	err := row.Scan(&i.Name, &i.Email, &i.Password)
+	return i, err
 }
