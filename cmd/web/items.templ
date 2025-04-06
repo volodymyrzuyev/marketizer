@@ -1,0 +1,27 @@
+package web
+
+templ items() {
+    <div class="flex flex-wrap w-full justify-around">
+        <div class="bg-highlight grid grid-cols-3 grid-rows-5 aspect-[3/1] min-w-[400px] basis:[400px] xl:basis-[24%] grow shrink p-[0.5%] m-[10px]">
+            <img class="col-span-1 row-span-4" src="" alt="Image containing an image of *itemName*">
+            <small class="col-span-1 row-start-5">
+                *assetID*
+            </small>
+            <h1 class="col-start-2 col-span-3">
+                *itemName* *price*
+            </h1>
+            <h2 class="row-start-2 col-start-2 col-span-3">
+                *gameName
+            </h2>
+            <p class="row-start-3 col-start-2 col-span-3">
+                Listed *timeSinceList* ago (*listTime*)
+            </p>
+            <button class="row-start-4 row-span-5 col-start-2 text-center">
+                <img class="" src="" alt="Clickable image of a star to favorite this item">
+            </button>
+            <button class="row-start-4 row-span-5 col-start-3 text-center">
+                Go to item on Steam Marketplace
+            </button>
+        </div>
+    </div>
+}

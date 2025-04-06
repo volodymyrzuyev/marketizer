@@ -9,7 +9,7 @@ templ Base() {
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width,initial-scale=1" />
-	<title>Marketize</title>
+	<title>Marketizer</title>
 	<link href="assets/css/output.css" rel="stylesheet" />
 	<script src="assets/js/htmx.min.js"></script>
 	<script src="//unpkg.com/alpinejs" defer></script>
@@ -17,8 +17,9 @@ templ Base() {
 
 <body class="font-[Arial, sans-serif] text-white bg-grayBG flex flex-col items-center">
 	@nav()
-	<main class="mt-[150px] flex flex-col items-center">
+	<main class="mt-[150px] flex flex-col items-center w-full">
 		{ children... }
+		@items()
 	</main>
 	<footer>
 		<small>&copy; 2025 Nathan Hilbert & Volodymyr Zuyev | IT 353 - Web Development Technologies</small>
