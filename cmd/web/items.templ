@@ -28,10 +28,21 @@ templ items() {
                     grid-rows-3
                     gap-[2%]">
 
-            <img class="w-full h-auto col-span-1 row-span-3 border-grayBG border-4 box-border rounded-xl self-center justify-self-center" 
+            <!--Image in first column, all rows-->
+            <img class="w-full 
+                        h-auto 
+                        col-span-1 
+                        row-span-3 
+                        border-grayBG 
+                        border-4 
+                        box-border 
+                        rounded-xl 
+                        self-center 
+                        justify-self-center" 
                     src="https://community.fastly.steamstatic.com/economy/image/6TMcQ7eX6E0EZl2byXi7vaVKyDk_zQLX05x6eLCFM9neAckxGDf7qU2e2gu64OnAeQ7835Ve42LAfCk4nReh8DEiv5ddOKA-rbI2RfC9wCX3zoA" 
                     alt="Image of the item, *itemName*">
 
+            <!--Title, assetID, and Price spanning column 2 and 3, first row-->
             <h1 class="col-start-2 col-span-2">
                 <div class="flex justify-between items-center">
                     <span class="font-bold">*itemName*</span>
@@ -42,6 +53,7 @@ templ items() {
                 </small>
             </h1>
 
+            <!--AppID and Time spanning column 2 and 3, second row-->
             <h2 class="text-[90%] row-start-2 col-start-2 col-span-2">                
                 <div class="flex flex-col justify-between h-full">
                     <span>*Appid*</span>
@@ -49,13 +61,16 @@ templ items() {
                 </div>
             </h2>
 
+            <!--Favorite button on second column, thrid row-->
             <button class="bg-grayBG p-[5%] text-[70%] row-start-3 col-start-2 rounded-xl hover:bg-highlightHover flex justify-between items-center overflow-hidden">
                 <p class="text-[100%]">Favorite this item?</p>
                 <img class="w-[20%]" src="./assets/icons/star.png" alt="Image of a star"> <!--Change img to starFavorited.png and add to favorites list when the button is pressed-->
             </button>
+
+            <!--Steam Marketplace link on third column, third row-->
             <a class="bg-grayBG text-[70%] row-start-3 col-start-3 rounded-xl hover:bg-highlightHover cursor-pointer flex justify-center items-center text-center overflow-hidden" href="*LinkToItemOnSteam*">
                 Go to item on Steam Marketplace?
             </a>
-        </div>       
+        </div>
     </div>
 }
