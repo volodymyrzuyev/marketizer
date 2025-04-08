@@ -78,12 +78,28 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.GET("/register", echo.WrapHandler(templ.Handler(web.Register(nil, nil))))
 	e.GET("/logout", s.logout, s.AuthMiddleware)
 
+	e.GET("/items", s.getItems, s.AuthMiddleware)
+
 	e.POST("/login", s.loginHandler)
 	e.POST("/register", s.register)
 
 	e.GET("/websocket", s.websocketHandler)
 
 	return e
+}
+
+func (s *Server) getItems(c echo.Context) error {
+	in := c.Request().Header.Get("Hx-Request")
+	if in != "[true]" {
+		return c.Redirect(302, "/")
+	}
+
+	items, err := s.db.GetItems()
+	if err != nil {
+		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
+	}
+
+	return templ.Handler(web.Items(items)).Component.Render(context.TODO(), c.Response().Writer)
 }
 
 func (s *Server) home(c echo.Context) error {
@@ -97,7 +113,7 @@ func (s *Server) home(c echo.Context) error {
 		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
 	}
 
-	return templ.Handler(web.Items(items, &user)).Component.Render(context.TODO(), c.Response().Writer)
+	return templ.Handler(web.ItemsRender(items, &user)).Component.Render(context.TODO(), c.Response().Writer)
 }
 
 func (s *Server) loginHandler(c echo.Context) error {

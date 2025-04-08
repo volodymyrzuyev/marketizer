@@ -1,0 +1,9 @@
+package web
+
+import "github.com/volodymyrzuyev/marketizer/internal/database/sql"
+
+templ ItemsRender(items []custSql.Item, user *custSql.User) {
+@Base(user) {
+@Items(items)
+}
+}
