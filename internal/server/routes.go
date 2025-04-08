@@ -67,7 +67,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	fileServer := http.FileServer(http.FS(web.Files))
 	e.GET("/assets/*", echo.WrapHandler(fileServer))
 
-	e.GET("/", echo.WrapHandler(templ.Handler(web.Base())), s.AuthMiddleware)
+	e.GET("/", s.home, s.AuthMiddleware)
 	e.GET("/login", echo.WrapHandler(templ.Handler(web.LoginPage(nil))))
 	e.GET("/register", echo.WrapHandler(templ.Handler(web.Register(nil))))
 
@@ -77,6 +77,15 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.GET("/websocket", s.websocketHandler)
 
 	return e
+}
+
+func (s *Server) home(c echo.Context) error {
+	items, err := s.db.GetItems()
+	if err != nil {
+		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
+	}
+
+	return templ.Handler(web.Items(items)).Component.Render(context.TODO(), c.Response().Writer)
 }
 
 func (s *Server) loginHandler(c echo.Context) error {

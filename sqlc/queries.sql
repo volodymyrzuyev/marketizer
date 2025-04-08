@@ -21,6 +21,9 @@ INSERT INTO
 VALUES
     (?1, ?2, ?3, ?4, ?5, ?6);
 
+-- name: GetItems :many
+SELECT * FROM items ORDER BY time DESC;
+
 
 -- name: Create_table1 :exec
 CREATE TABLE IF NOT EXISTS users(

@@ -21,6 +21,7 @@ type Service interface {
 	GetUser(email string) (custSql.User, error)
 	AddUser(email, password, name string) error
 	AddItems(listingInfo []byte, assetInfo []byte)
+	GetItems() ([]custSql.Item, error)
 	// Close terminates the database connection.
 	// It returns an error if the connection cannot be closed.
 	Close() error
@@ -69,6 +70,10 @@ func (s *service) AddUser(email, password, name string) error {
 		Password: sql.NullString{password, password != ""},
 	}
 	return s.q.Add_User(context.TODO(), args)
+}
+
+func (s *service) GetItems() ([]custSql.Item, error) {
+	return s.q.GetItems(context.TODO())
 }
 
 func (s *service) AddItems(listingInfo []byte, assetInfo []byte) {

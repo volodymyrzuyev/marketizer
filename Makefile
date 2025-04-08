@@ -22,6 +22,7 @@ tailwind-install:
 	@chmod +x tailwindcss
 
 build: tailwind-install templ-install
+	cd sqlc && sqlc generate
 	@echo "Building..."
 	@templ generate
 	@./tailwindcss -i cmd/web/styles/input.css -o cmd/web/assets/css/output.css

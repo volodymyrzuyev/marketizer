@@ -98,6 +98,40 @@ func (q *Queries) Create_table3(ctx context.Context) error {
 	return err
 }
 
+const getItems = `-- name: GetItems :many
+SELECT asset_id, market_hash_name, price, appid, time, image FROM items ORDER BY time DESC
+`
+
+func (q *Queries) GetItems(ctx context.Context) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, getItems)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Item
+	for rows.Next() {
+		var i Item
+		if err := rows.Scan(
+			&i.AssetID,
+			&i.MarketHashName,
+			&i.Price,
+			&i.Appid,
+			&i.Time,
+			&i.Image,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const get_All_Users = `-- name: Get_All_Users :many
 SELECT
     name, email, password
