@@ -7,7 +7,7 @@ templ Register(err templ.Component, user *custSql.User) {
 		<div class="w-fit flex flex-col items-center p-2 border-highlight border-4">
 			<h2 class="text-2xl font-bold">Login</h2>
 			<form action="/register" method="post" class="flex flex-col gap-2">
-				<label for="email">Email</label>
+				<label for="email">Username</label>
 				<input type="text" id="email" name="email" required class="bg-[rgb(70,67,82)]"/>
 				<label for="name">Name</label>
 				<input type="text" id="name" name="name" required class="bg-[rgb(70,67,82)]"/>
@@ -29,5 +29,5 @@ templ Register(err templ.Component, user *custSql.User) {
 }
 
 templ EmailExists() {
-	<p class="text-red-200">This email is allready used, you should <a href="/login">login</a></p>
+	<p class="text-red-200">This username is taken, you should <a href="/login">login</a></p>
 }
