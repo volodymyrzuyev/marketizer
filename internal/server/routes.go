@@ -45,6 +45,12 @@ func (s *Server) AuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 			return c.Redirect(302, "/login")
 		}
 
+		loggedIn, ok := s.loggedInUsers[claims["user"].(string)]
+
+		if !loggedIn || !ok {
+			return c.Redirect(302, "/login")
+		}
+
 		c.Set("user", claims["user"])
 
 		return next(c)
@@ -70,6 +76,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.GET("/", s.home, s.AuthMiddleware)
 	e.GET("/login", echo.WrapHandler(templ.Handler(web.LoginPage(nil, nil))))
 	e.GET("/register", echo.WrapHandler(templ.Handler(web.Register(nil, nil))))
+	e.GET("/logout", s.logout, s.AuthMiddleware)
 
 	e.POST("/login", s.loginHandler)
 	e.POST("/register", s.register)
@@ -105,7 +112,8 @@ func (s *Server) loginHandler(c echo.Context) error {
 		return templ.Handler(web.LoginPage(web.InvalidPassword(), nil)).Component.Render(context.TODO(), c.Response().Writer)
 	}
 
-	setCookie(c, usr.Email)
+	setCookie(c, email)
+	s.loggedInUsers[email] = true
 
 	return c.Redirect(302, "/")
 }
@@ -127,6 +135,13 @@ func (s *Server) register(c echo.Context) error {
 	}
 
 	setCookie(c, email)
+	s.loggedInUsers[email] = true
+	return c.Redirect(302, "/")
+}
+
+func (s *Server) logout(c echo.Context) error {
+
+	s.loggedInUsers[c.Get("user").(string)] = false
 
 	return c.Redirect(302, "/")
 }

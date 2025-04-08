@@ -18,6 +18,8 @@ type Server struct {
 	port int
 
 	db database.Service
+
+	loggedInUsers map[string]bool
 }
 
 func (s *Server) runSteam() {
@@ -51,9 +53,9 @@ func (s *Server) runSteam() {
 func NewServer() *http.Server {
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
 	NewServer := &Server{
-		port: port,
-
-		db: database.New(),
+		port:          port,
+		loggedInUsers: make(map[string]bool),
+		db:            database.New(),
 	}
 
 	// Declare Server config
