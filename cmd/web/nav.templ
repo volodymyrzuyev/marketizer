@@ -1,20 +1,32 @@
 package web
 
-templ nav() {
-	<header class="bg-highlight fixed top-0 left-0 w-full z-10 text-center border-b border-black">
-		<h1 class="p-4 m-0 text-3xl font-bold">Marketizer</h1>
-		<nav class="w-full">
-			<ul class="list-none flex justify-center m-0 p-0">
-				<li class="inline-block w-[175px]">
-					<a href="/" class="block p-5 text-white no-underline hover:bg-highlightHover">Home</a>
-				</li>
-				<li class="inline-block w-[175px]">
-					<a href="#" class="block p-5 text-white no-underline hover:bg-highlightHover">Search</a>
-				</li>
-				<li class="inline-block w-[175px]">
-					<a href="/login" class="block p-5 text-white no-underline hover:bg-highlightHover">Log in/Sign up</a>
-				</li>
-			</ul>
-		</nav>
-	</header>
+import "github.com/volodymyrzuyev/marketizer/internal/database/sql"
+import "fmt"
+
+templ nav(user *custSql.User) {
+<header class="bg-highlight fixed top-0 left-0 w-full z-10 text-center border-b border-black">
+	<h1 class="p-4 m-0 text-3xl font-bold">Marketizer</h1>
+	<nav class="w-full">
+		<ul class="list-none flex justify-center m-0 p-0">
+			<li class="inline-block w-[175px]">
+				<a href="/" class="block p-5 text-white no-underline hover:bg-highlightHover">Home</a>
+			</li>
+			<li class="inline-block w-[175px]">
+				<a href="#" class="block p-5 text-white no-underline hover:bg-highlightHover">Search</a>
+			</li>
+			if user == nil {
+			<li class="inline-block w-[175px]">
+				<a href="/login" class="block p-5 text-white no-underline hover:bg-highlightHover">Log in/Sign up</a>
+			</li>
+			} else {
+			<li class="inline-block w-[175px]">
+				<p class="block p-5 text-white no-underline hover:bg-highlightHover">
+					{ fmt.Sprintf("Welcone %v!",
+					user.Email) }
+				</p>
+			</li>
+			}
+		</ul>
+	</nav>
+</header>
 }

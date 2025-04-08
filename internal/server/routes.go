@@ -68,8 +68,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.GET("/assets/*", echo.WrapHandler(fileServer))
 
 	e.GET("/", s.home, s.AuthMiddleware)
-	e.GET("/login", echo.WrapHandler(templ.Handler(web.LoginPage(nil))))
-	e.GET("/register", echo.WrapHandler(templ.Handler(web.Register(nil))))
+	e.GET("/login", echo.WrapHandler(templ.Handler(web.LoginPage(nil, nil))))
+	e.GET("/register", echo.WrapHandler(templ.Handler(web.Register(nil, nil))))
 
 	e.POST("/login", s.loginHandler)
 	e.POST("/register", s.register)
@@ -85,7 +85,12 @@ func (s *Server) home(c echo.Context) error {
 		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
 	}
 
-	return templ.Handler(web.Items(items)).Component.Render(context.TODO(), c.Response().Writer)
+	user, err := s.db.GetUser(c.Get("user").(string))
+	if err != nil {
+		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
+	}
+
+	return templ.Handler(web.Items(items, &user)).Component.Render(context.TODO(), c.Response().Writer)
 }
 
 func (s *Server) loginHandler(c echo.Context) error {
@@ -94,10 +99,10 @@ func (s *Server) loginHandler(c echo.Context) error {
 
 	usr, err := s.db.GetUser(email)
 	if err != nil {
-		return templ.Handler(web.LoginPage(web.ShouldRegister())).Component.Render(context.TODO(), c.Response().Writer)
+		return templ.Handler(web.LoginPage(web.ShouldRegister(), nil)).Component.Render(context.TODO(), c.Response().Writer)
 	}
 	if usr.Password.String != password {
-		return templ.Handler(web.LoginPage(web.InvalidPassword())).Component.Render(context.TODO(), c.Response().Writer)
+		return templ.Handler(web.LoginPage(web.InvalidPassword(), nil)).Component.Render(context.TODO(), c.Response().Writer)
 	}
 
 	setCookie(c, usr.Email)
@@ -112,7 +117,7 @@ func (s *Server) register(c echo.Context) error {
 
 	_, err := s.db.GetUser(email)
 	if err == nil {
-		return templ.Handler(web.Register(web.EmailExists())).Component.Render(context.TODO(), c.Response().Writer)
+		return templ.Handler(web.Register(web.EmailExists(), nil)).Component.Render(context.TODO(), c.Response().Writer)
 	}
 
 	err = s.db.AddUser(email, password, name)

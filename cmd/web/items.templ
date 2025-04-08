@@ -2,12 +2,12 @@ package web
 
 import "github.com/volodymyrzuyev/marketizer/internal/database/sql"
 
-templ Items(items []custSql.Item) {
-@Base() {
-<div class="flex flex-wrap ">
-	for _, itemLine := range items {
-	@item(itemLine)
+templ Items(items []custSql.Item, user *custSql.User) {
+	@Base(user) {
+		<div class="flex flex-wrap ">
+			for _, itemLine := range items {
+				@item(itemLine)
+			}
+		</div>
 	}
-</div>
-}
 }
