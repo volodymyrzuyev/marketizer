@@ -9,9 +9,7 @@ func getCommunityMarketLink(a int64, n string) string {
 }
 
 templ item(item custSql.Item) {
-	<!--Wrapper for individual item divs-->
-	<!--Inside the wrapper, divs (each containing one item) will be generated with this format. 
-    "**" denotes an area that needs to be populated with item info-->
+	<!--Wrapper for individual item div-->
 	<div
 		class="aspect-[3/1]
                     m-[10px] 
@@ -23,8 +21,7 @@ templ item(item custSql.Item) {
                     grow shrink 
 
                     bg-highlight 
-                    sm:text-2xl
-                    md:text-xl
+                    md:text-lg
                     xl:text-sm
                     p-[0.5%] 
                     rounded-xl 
@@ -39,51 +36,50 @@ templ item(item custSql.Item) {
 		<!--Image in first column, all rows-->
 		<img
 			class="w-full 
-                        h-auto 
-                        col-span-1 
-                        row-span-3 
-                        border-grayBG 
-                        border-4 
-                        box-border 
-                        rounded-xl 
-                        self-center 
-                        justify-self-center"
+                    h-full
+					object-contain
+                    col-span-1 
+                    row-span-3 
+                    border-grayBG 
+                    border-4 
+                    box-border 
+                    rounded-xl 
+                    self-center 
+                    justify-self-center"
 			src={ item.Image }
 			alt="Image of the item, *itemName*"
 		/>
-		<!--Title, assetID, and Price spanning column 2 and 3, first row-->
-		<h1 class="col-start-2 col-span-2">
-			<div class="flex justify-between items-center">
+		<!--Title, Price, and AppID spanning column 2 and 3, first row-->
+		<h1 class="col-start-2 col-span-2 flex-col items-start space-y-0">
+			<div class="flex justify-between w-full">
 				<span class="font-bold">{ item.MarketHashName }</span>
 				<span>{ fmt.Sprintf("%.2f$",float64(item.Price)/float64(100)) }</span>
 			</div>
-			<small class="text-[50%] align-top">
-				{ fmt.Sprint(item.AssetID) }
-			</small>
+			<span>{ fmt.Sprint(item.Appid) }</span>
 		</h1>
-		<!--AppID and Time spanning column 2 and 3, second row-->
-		<h2 class="text-[90%] row-start-2 col-start-2 col-span-2">
-			<div class="flex flex-col justify-between h-full">
-				<span>{ fmt.Sprint(item.Appid) }</span>
-				<span>
+		<!--AssetID and Time spanning column 2 and 3, second row-->
+		<h2 class="text-[90%] row-start-2 col-start-2 col-span-2 flex justify-end items-end w-full">
+			<div class="flex flex-col items-end">
+				<small class="text-[60%] leading-none">
+					{ fmt.Sprint(item.AssetID) }
+				</small>
+				<span class="leading-none">
 					{ fmt.Sprintf("Last seen: %d seconds ago", int(time.Now().Sub(time.Unix(item.Time,0)).Seconds())) }
 				</span>
 			</div>
 		</h2>
 		<!--Favorite button on second column, thrid row-->
-		<button
-			class="bg-grayBG p-[5%] text-[70%] row-start-3 col-start-2 rounded-xl hover:bg-highlightHover flex justify-between items-center overflow-hidden"
-		>
-			<p class="text-[100%]">Favorite this item?</p>
-			<img class="w-[20%]" src="./assets/icons/star.png" alt="Image of a star"/>
+		<button class="bg-grayBG p-[5%] text-[80%] row-start-3 col-start-2 rounded-xl hover:bg-highlightHover flex items-center justify-between overflow-hidden">
+			<p class="text-[100%] text-center">Favorite?</p>
+			<img class="w-[20%] object-contain" src="./assets/icons/star.png" alt="Image of a star"/>
 			<!--Change img to starFavorited.png and add to favorites list when the button is pressed-->
 		</button>
 		<!--Steam Marketplace link on third column, third row-->
 		<a
-			class="bg-grayBG text-[70%] row-start-3 col-start-3 rounded-xl hover:bg-highlightHover cursor-pointer flex justify-center items-center text-center overflow-hidden"
+			class="bg-grayBG p-[5%] text-[80%] row-start-3 col-start-3 rounded-xl hover:bg-highlightHover cursor-pointer flex items-center text-center overflow-hidden leading-tight"
 			href={ templ.SafeURL(getCommunityMarketLink(item.Appid, item.MarketHashName)) }
 		>
-			Go to item on Steam Marketplace?
+			View on Steam Marketplace?
 		</a>
 	</div>
 }
