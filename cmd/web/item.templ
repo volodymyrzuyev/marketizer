@@ -69,8 +69,8 @@ templ item(item custSql.Item) {
 			</div>
 		</h2>
 		<!--Favorite button on second column, thrid row-->
-		<button class="bg-bgColor p-[5%] text-[80%] row-start-3 col-start-2 rounded-xl hover:bg-highlightHover flex items-center justify-between overflow-hidden">
-			<p class="text-[100%] text-center">Favorite?</p>
+		<button class="bg-bgColor p-[5%] text-[80%] row-start-3 col-start-2 rounded-xl hover:bg-highlightHover flex items-center justify-around overflow-hidden">
+			<p class="text-[100%] text-center">Favorite</p>
 			<img class="w-[20%] object-contain" src="./assets/icons/star.png" alt="Image of a star"/>
 			<!--Change img to starFavorited.png and add to favorites list when the button is pressed-->
 		</button>
@@ -79,7 +79,7 @@ templ item(item custSql.Item) {
 			class="bg-bgColor p-[5%] text-[80%] row-start-3 col-start-3 rounded-xl hover:bg-highlightHover cursor-pointer flex items-center text-center overflow-hidden leading-tight"
 			href={ templ.SafeURL(getCommunityMarketLink(item.Appid, item.MarketHashName)) }
 		>
-			View on Steam Marketplace?
+			View on Steam Marketplace
 		</a>
 	</div>
 }

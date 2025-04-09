@@ -4,33 +4,37 @@ import "github.com/volodymyrzuyev/marketizer/internal/database/sql"
 import "fmt"
 
 templ nav(user *custSql.User) {
-	<header class="bg-highlight fixed top-0 left-0 w-full h-[125px] z-10 text-center border-b-2 border-b-black flex justify between items-center">
-		<h1 class="ml-6 mr-3 text-3xl font-bold">
+	<header class="bg-highlight fixed top-0 left-0 w-full h-[125px] z-10 text-center border-b-2 border-b-black flex justify-between items-center">
+		<h1 class="font-bold">
 			<a href="/" class="text-3xl p-3 font-bold text-white no-underline flex justify-center items-center">
-				<img class="w-auto h-[120px]" src="assets/icons/marketizerIcon.png" alt="Marketizer icon">
+				<img class="w-auto  h-[120px]" src="assets/icons/marketizerIcon.png" alt="Marketizer icon"/>
 				Marketizer
 			</a>
 		</h1>
-		<nav class="w-full h-[60px]">
-			<ul class="h-full list-none flex justify-end items-center ">
-				if user == nil {
-					<li class="h-full">
-						<a href="/login" class="p-3 h-full flex items-center text-white no-underline border-transparent rounded-full hover:bg-highlightHover">Log in/Sign up</a>
-					</li>
-				} else {
-					<li class="h-full">
-						<p class="p-3 h-full flex items-center text-white no-underline border-transparent rounded-full hover:bg-highlightHover cursor-pointer">
-							{ fmt.Sprintf("Welcome %v! View profile?", user.Name.String) }
-						</p>
-					</li>
-					<li class="h-full">
-						<a href="/logout" class="p-3 h-full flex items-center text-white no-underline border-transparent rounded-full hover:bg-highlightHover">Logout</a>
-					</li>
-				}
-				<li class="h-full">
-					<a href="#" class="p-3 h-full flex items-center text-white no-underline border-transparent rounded-full hover:bg-highlightHover">Search<img class="inline w-8 h-auto ml-2" src="assets/icons/searchIcon.png" alt="Search icon"></a>
-				</li>
-			</ul>
-		</nav>
+		if user == nil {
+			<nav class="w-auto h-[60px]">
+				<a href="/login" class="p-3 w-auto h-full flex items-center text-white no-underline border-transparent rounded-full hover:bg-highlightHover">Log in/Sign up</a>
+			</nav>
+		} else {
+			<p class="fixed right-5 top-2">
+				{ fmt.Sprintf("Welcome, %v!", user.Name.String) }
+			</p>
+			<nav class="flex items-end justify-center items-center ">
+				<form action="/search" method="GET" class="p-2 flex w-[100px] sm:w-[300px] items-center bg-bgColor rounded-full">
+					<button type="submit">
+						<img class="w-6 h-6 m-2 object-contain" src="assets/icons/searchIcon.png" alt="Search button"/>
+					</button>
+					<input type="text" name="search" placeholder="Search..." class="ml-2 sm:ml-0 text-[80%] sm:text-[100%] placeholder-white w-full bg-bgColor outline-none focus:outline-none"/>
+				</form>
+				
+				<input type="checkbox" id="menu-toggle" class="hidden peer"/>
+				<label for="menu-toggle" class=" mr-2 block text-white text-4xl cursor-pointer flex justify-center items-center p-3">&#9776;</label>
+
+				<div class="menu-content absolute right-0 top-[90px] peer-checked:block focus-within:block hidden bg-gray-800 text-white w-48 p-4 rounded-lg">
+					<a href="/profile" class="block py-2 hover:bg-highlightHover rounded-lg">View Favorites</a>
+					<a href="/logout" class="block py-2 hover:bg-highlightHover rounded-lg">Logout</a>
+				</div>
+			</nav>
+		}
 	</header>
 }

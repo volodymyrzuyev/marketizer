@@ -3,7 +3,7 @@ package web
 templ buttons() {
 	<div class="flex justify-center">
 		<button
-			class="p-5 text-white no-underline hover:bg-highlightHover"
+			class="p-3 text-white no-underline border-transparent rounded-full hover:bg-highlightHover"
 			x-on:click="
 			isSameSort = (sortBy === 'time');
 			sortBy = 'time';
@@ -12,7 +12,7 @@ templ buttons() {
 			x-text=" 'Last Seen' + (sortBy === 'time' ? (order === 'asc' ? ' ▲' : ' ▼') : '') "
 		></button>
 		<button
-			class="p-5 text-white no-underline hover:bg-highlightHover"
+			class="p-3 text-white no-underline border-transparent rounded-full hover:bg-highlightHover"
 			x-on:click="
 			isSameSort = (sortBy === 'price');
 			sortBy = 'price';
@@ -21,7 +21,7 @@ templ buttons() {
 			x-text=" 'Price' + (sortBy === 'price' ? (order === 'asc' ? ' ▲' : ' ▼') : '') "
 		></button>
 		<button
-			class="p-5 text-white no-underline hover:bg-highlightHover"
+			class="p-3 text-white no-underline border-transparent rounded-full hover:bg-highlightHover"
 			x-on:click="
 			isSameSort = (sortBy === 'name');
 			sortBy = 'name';
