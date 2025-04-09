@@ -1,0 +1,12 @@
+package web
+
+import "github.com/volodymyrzuyev/marketizer/internal/database/sql"
+
+templ Profile(items []custSql.Item) {
+    
+    <div class="flex flex-wrap" id="content" hx-get="/items" hx-trigger="every 10s" hx-target="#content">
+        for _, itemLine := range items {
+            @item(itemLine)
+        }
+    </div>
+}

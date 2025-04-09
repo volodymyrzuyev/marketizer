@@ -4,13 +4,13 @@ import "github.com/volodymyrzuyev/marketizer/internal/database/sql"
 
 templ LoginPage(err templ.Component, user *custSql.User) {
 	@Base(user) {
-		<div class="w-fit flex flex-col items-center p-2 border-highlight border-4">
+		<div class="w-fit flex flex-col items-center p-2 border-highlight border-4 rounded-lg">
 			<h2 class="text-2xl font-bold">Login</h2>
 			<form action="/login" method="post" class="flex flex-col gap-2">
 				<label for="email">Username</label>
-				<input type="text" id="email" name="email" required class="bg-[rgb(70,67,82)]"/>
+				<input type="text" id="email" name="email" required class="bg-highlight"/>
 				<label for="password">Password</label>
-				<input type="password" id="password" name="password" required class="bg-[rgb(70,67,82)]"/>
+				<input type="password" id="password" name="password" required class="bg-highlight"/>
 				<button
 					type="submit"
 					class="px-4 py-2 bg-highlight text-white font-semibold rounded-lg shadow-md hover:bg-highlightHover focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -27,7 +27,7 @@ templ LoginPage(err templ.Component, user *custSql.User) {
 }
 
 templ ShouldRegister() {
-	<p class="text-red-200">Username does not exist your should <a href="/register">register</a></p>
+	<p class="text-red-200">Username does not exist you should <a href="/register">register</a></p>
 }
 
 templ InvalidPassword() {

@@ -6,9 +6,9 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                'grayBG': 'rgb(110,107,122)',
-                'highlight': 'rgb(70,67,82)',
-                'highlightHover': 'rgb(98,92,122)',
+                'bgColor': 'rgb(68,104,142)',
+                'highlight': 'rgb(46,71,96)',
+                'highlightHover': 'rgb(104,141,182)',
             }
         },
     },

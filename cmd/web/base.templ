@@ -2,8 +2,6 @@ package web
 
 import "github.com/volodymyrzuyev/marketizer/internal/database/sql"
 
-const bg_color = "bg-[rgb(110,107,122)]"
-
 templ Base(user *custSql.User) {
 	<!DOCTYPE html>
 	<html lang="en" class="h-screen">
@@ -12,12 +10,13 @@ templ Base(user *custSql.User) {
 			<meta name="viewport" content="width=device-width,initial-scale=1"/>
 			<title>Marketizer</title>
 			<link href="assets/css/output.css" rel="stylesheet"/>
+			<link rel="icon" type="image/x-icon" href="assets/icons/marketizerIcon.png"/>
 			<script src="assets/js/htmx.min.js"></script>
 			<script src="//unpkg.com/alpinejs" defer></script>
 		</head>
-		<body class="font-[Arial, sans-serif] text-white bg-grayBG flex flex-col items-center">
+		<body class="font-[Arial, sans-serif] text-white bg-bgColor flex flex-col items-center">
 			@nav(user)
-			<main class="mt-[150px] flex flex-col items-center w-full">
+			<main class="mt-[130px] flex flex-col items-center w-full">
 				{ children... }
 			</main>
 			<footer>
