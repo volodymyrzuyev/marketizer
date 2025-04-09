@@ -21,9 +21,23 @@ INSERT INTO
 VALUES
     (?1, ?2, ?3, ?4, ?5, ?6);
 
--- name: GetItems :many
+-- name: GetItemsPriceDESC :many
+SELECT * FROM items ORDER BY price DESC;
+
+-- name: GetItemsPriceASC :many
+SELECT * FROM items ORDER BY price ASC;
+
+-- name: GetItemsNameDESC :many
+SELECT * FROM items ORDER BY MARKET_HASH_NAME DESC;
+
+-- name: GetItemsNameASC :many
+SELECT * FROM items ORDER BY MARKET_HASH_NAME ASC;
+
+-- name: GetItemsTimeDESC :many
 SELECT * FROM items ORDER BY time DESC;
 
+-- name: GetItemsTimeASC :many
+SELECT * FROM items ORDER BY time ASC;
 
 -- name: Create_table1 :exec
 CREATE TABLE IF NOT EXISTS users(

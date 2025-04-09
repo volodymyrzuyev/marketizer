@@ -1,0 +1,33 @@
+package web
+
+templ buttons() {
+	<div class="flex justify-center">
+		<button
+			class="p-5 text-white no-underline hover:bg-highlightHover"
+			x-on:click="
+			isSameSort = (sortBy === 'time');
+			sortBy = 'time';
+			order = isSameSort ? (order === 'asc' ? 'dsc' : 'asc') : 'asc';
+			setTimeout(() => { htmx.trigger('body', 'loadItems'); }, 0);"
+			x-text=" 'Last Seen' + (sortBy === 'time' ? (order === 'asc' ? ' ▲' : ' ▼') : '') "
+		></button>
+		<button
+			class="p-5 text-white no-underline hover:bg-highlightHover"
+			x-on:click="
+			isSameSort = (sortBy === 'price');
+			sortBy = 'price';
+			order = isSameSort ? (order === 'asc' ? 'dsc' : 'asc') : 'asc';
+			setTimeout(() => { htmx.trigger('body', 'loadItems'); }, 0);"
+			x-text=" 'Price' + (sortBy === 'price' ? (order === 'asc' ? ' ▲' : ' ▼') : '') "
+		></button>
+		<button
+			class="p-5 text-white no-underline hover:bg-highlightHover"
+			x-on:click="
+			isSameSort = (sortBy === 'name');
+			sortBy = 'name';
+			order = isSameSort ? (order === 'asc' ? 'dsc' : 'asc') : 'asc';
+			setTimeout(() => { htmx.trigger('body', 'loadItems'); }, 0);"
+			x-text=" 'Name' + (sortBy === 'name' ? (order === 'asc' ? ' ▲' : ' ▼') : '') "
+		></button>
+	</div>
+}

@@ -21,7 +21,7 @@ type Service interface {
 	GetUser(email string) (custSql.User, error)
 	AddUser(email, password, name string) error
 	AddItems(listingInfo []byte, assetInfo []byte)
-	GetItems() ([]custSql.Item, error)
+	GetItems(orderBy, sortBy string) ([]custSql.Item, error)
 	// Close terminates the database connection.
 	// It returns an error if the connection cannot be closed.
 	Close() error
@@ -72,8 +72,33 @@ func (s *service) AddUser(email, password, name string) error {
 	return s.q.Add_User(context.TODO(), args)
 }
 
-func (s *service) GetItems() ([]custSql.Item, error) {
-	return s.q.GetItems(context.TODO())
+func (s *service) GetItems(orderBy, sortBy string) ([]custSql.Item, error) {
+	switch orderBy {
+	case "asc":
+		switch sortBy {
+		case "time":
+			return s.q.GetItemsTimeDESC(context.TODO())
+		case "price":
+			return s.q.GetItemsPriceASC(context.TODO())
+		case "name":
+			return s.q.GetItemsNameASC(context.TODO())
+		default:
+			return []custSql.Item{}, fmt.Errorf("Invalid ordering")
+		}
+	case "dsc":
+		switch sortBy {
+		case "time":
+			return s.q.GetItemsTimeASC(context.TODO())
+		case "price":
+			return s.q.GetItemsPriceDESC(context.TODO())
+		case "name":
+			return s.q.GetItemsNameDESC(context.TODO())
+		default:
+			return []custSql.Item{}, fmt.Errorf("Invalid ordering")
+		}
+	}
+
+	return []custSql.Item{}, fmt.Errorf("Invalid ordering")
 }
 
 func (s *service) AddItems(listingInfo []byte, assetInfo []byte) {

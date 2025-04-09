@@ -3,7 +3,15 @@ package web
 import "github.com/volodymyrzuyev/marketizer/internal/database/sql"
 
 templ Items(items []custSql.Item) {
-	<div class="flex flex-wrap" id="content" hx-get="/items" hx-trigger="every 10s" hx-swap="outerHTML" hx-swap-oob="true">
+	<div
+		class="flex flex-wrap"
+		id="content"
+		hx-get="/items"
+		hx-trigger="loadItems from:body"
+		hx-swap="outerHTML"
+		hx-swap-oob="true"
+		x-bind:hx-vals="JSON.stringify({ sortBy: sortBy, order: order })"
+	>
 		for _, itemLine := range items {
 			@item(itemLine)
 		}

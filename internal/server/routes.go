@@ -94,7 +94,22 @@ func (s *Server) getItems(c echo.Context) error {
 		return c.Redirect(302, "/")
 	}
 
-	items, err := s.db.GetItems()
+	params := c.Request().URL.Query()
+
+	fmt.Println("Params", params)
+
+	sortBy, ok := params["sortBy"]
+	if !ok || len(sortBy) != 1 {
+		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
+	}
+
+	orderBy, ok := params["order"]
+	if !ok || len(orderBy) != 1 {
+		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
+	}
+
+	items, err := s.db.GetItems(orderBy[0], sortBy[0])
+
 	if err != nil {
 		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
 	}
@@ -103,7 +118,7 @@ func (s *Server) getItems(c echo.Context) error {
 }
 
 func (s *Server) home(c echo.Context) error {
-	items, err := s.db.GetItems()
+	items, err := s.db.GetItems("asc", "time")
 	if err != nil {
 		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
 	}

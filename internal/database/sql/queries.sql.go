@@ -98,12 +98,182 @@ func (q *Queries) Create_table3(ctx context.Context) error {
 	return err
 }
 
-const getItems = `-- name: GetItems :many
+const getItemsNameASC = `-- name: GetItemsNameASC :many
+SELECT asset_id, market_hash_name, price, appid, time, image FROM items ORDER BY MARKET_HASH_NAME ASC
+`
+
+func (q *Queries) GetItemsNameASC(ctx context.Context) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, getItemsNameASC)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Item
+	for rows.Next() {
+		var i Item
+		if err := rows.Scan(
+			&i.AssetID,
+			&i.MarketHashName,
+			&i.Price,
+			&i.Appid,
+			&i.Time,
+			&i.Image,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getItemsNameDESC = `-- name: GetItemsNameDESC :many
+SELECT asset_id, market_hash_name, price, appid, time, image FROM items ORDER BY MARKET_HASH_NAME DESC
+`
+
+func (q *Queries) GetItemsNameDESC(ctx context.Context) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, getItemsNameDESC)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Item
+	for rows.Next() {
+		var i Item
+		if err := rows.Scan(
+			&i.AssetID,
+			&i.MarketHashName,
+			&i.Price,
+			&i.Appid,
+			&i.Time,
+			&i.Image,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getItemsPriceASC = `-- name: GetItemsPriceASC :many
+SELECT asset_id, market_hash_name, price, appid, time, image FROM items ORDER BY price ASC
+`
+
+func (q *Queries) GetItemsPriceASC(ctx context.Context) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, getItemsPriceASC)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Item
+	for rows.Next() {
+		var i Item
+		if err := rows.Scan(
+			&i.AssetID,
+			&i.MarketHashName,
+			&i.Price,
+			&i.Appid,
+			&i.Time,
+			&i.Image,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getItemsPriceDESC = `-- name: GetItemsPriceDESC :many
+SELECT asset_id, market_hash_name, price, appid, time, image FROM items ORDER BY price DESC
+`
+
+func (q *Queries) GetItemsPriceDESC(ctx context.Context) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, getItemsPriceDESC)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Item
+	for rows.Next() {
+		var i Item
+		if err := rows.Scan(
+			&i.AssetID,
+			&i.MarketHashName,
+			&i.Price,
+			&i.Appid,
+			&i.Time,
+			&i.Image,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getItemsTimeASC = `-- name: GetItemsTimeASC :many
+SELECT asset_id, market_hash_name, price, appid, time, image FROM items ORDER BY time ASC
+`
+
+func (q *Queries) GetItemsTimeASC(ctx context.Context) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, getItemsTimeASC)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Item
+	for rows.Next() {
+		var i Item
+		if err := rows.Scan(
+			&i.AssetID,
+			&i.MarketHashName,
+			&i.Price,
+			&i.Appid,
+			&i.Time,
+			&i.Image,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getItemsTimeDESC = `-- name: GetItemsTimeDESC :many
 SELECT asset_id, market_hash_name, price, appid, time, image FROM items ORDER BY time DESC
 `
 
-func (q *Queries) GetItems(ctx context.Context) ([]Item, error) {
-	rows, err := q.db.QueryContext(ctx, getItems)
+func (q *Queries) GetItemsTimeDESC(ctx context.Context) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, getItemsTimeDESC)
 	if err != nil {
 		return nil, err
 	}
