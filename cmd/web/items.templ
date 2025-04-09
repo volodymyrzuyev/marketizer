@@ -7,7 +7,7 @@ templ Items(items []custSql.Item) {
 		class="flex flex-wrap"
 		id="content"
 		hx-get="/items"
-		hx-trigger="loadItems from:body"
+		hx-trigger="every 10s, loadItems from:body"
 		hx-swap="outerHTML"
 		hx-swap-oob="true"
 		x-bind:hx-vals="JSON.stringify({ sortBy: sortBy, order: order })"

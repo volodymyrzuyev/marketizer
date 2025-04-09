@@ -124,6 +124,10 @@ func (s *service) AddItems(listingInfo []byte, assetInfo []byte) {
 		Image:          "https://community.fastly.steamstatic.com/economy/image/" + asset.IconUrl,
 	}
 
+	if dbPrams.Price == 0 {
+		return
+	}
+
 	err = s.q.AddAsset(context.TODO(), dbPrams)
 	if err != nil {
 		fmt.Println("DB add error", err)
