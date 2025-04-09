@@ -21,7 +21,7 @@ type Service interface {
 	GetUser(email string) (custSql.User, error)
 	AddUser(email, password, name string) error
 	AddItems(listingInfo []byte, assetInfo []byte)
-	GetItems(orderBy, sortBy string) ([]custSql.Item, error)
+	GetItems(orderBy, sortBy, searchString string) ([]custSql.Item, error)
 	// Close terminates the database connection.
 	// It returns an error if the connection cannot be closed.
 	Close() error
@@ -72,27 +72,27 @@ func (s *service) AddUser(email, password, name string) error {
 	return s.q.Add_User(context.TODO(), args)
 }
 
-func (s *service) GetItems(orderBy, sortBy string) ([]custSql.Item, error) {
+func (s *service) GetItems(orderBy, sortBy, searchString string) ([]custSql.Item, error) {
 	switch orderBy {
 	case "asc":
 		switch sortBy {
 		case "time":
-			return s.q.GetItemsTimeDESC(context.TODO())
+			return s.q.GetItemsTimeDESC(context.TODO(), "%"+searchString+"%")
 		case "price":
-			return s.q.GetItemsPriceASC(context.TODO())
+			return s.q.GetItemsPriceASC(context.TODO(), "%"+searchString+"%")
 		case "name":
-			return s.q.GetItemsNameASC(context.TODO())
+			return s.q.GetItemsNameASC(context.TODO(), "%"+searchString+"%")
 		default:
 			return []custSql.Item{}, fmt.Errorf("Invalid ordering")
 		}
 	case "dsc":
 		switch sortBy {
 		case "time":
-			return s.q.GetItemsTimeASC(context.TODO())
+			return s.q.GetItemsTimeASC(context.TODO(), "%"+searchString+"%")
 		case "price":
-			return s.q.GetItemsPriceDESC(context.TODO())
+			return s.q.GetItemsPriceDESC(context.TODO(), "%"+searchString+"%")
 		case "name":
-			return s.q.GetItemsNameDESC(context.TODO())
+			return s.q.GetItemsNameDESC(context.TODO(), "%"+searchString+"%")
 		default:
 			return []custSql.Item{}, fmt.Errorf("Invalid ordering")
 		}

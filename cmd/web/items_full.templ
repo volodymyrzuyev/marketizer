@@ -4,9 +4,7 @@ import "github.com/volodymyrzuyev/marketizer/internal/database/sql"
 
 templ ItemsRender(items []custSql.Item, user *custSql.User) {
 	@Base(user) {
-		<div x-data="{ sortBy: 'time', order: 'asc' }">
-			@buttons()
-			@Items(items)
-		</div>
+		@buttons()
+		@Items(items)
 	}
 }

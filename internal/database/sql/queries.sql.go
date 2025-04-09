@@ -99,11 +99,14 @@ func (q *Queries) Create_table3(ctx context.Context) error {
 }
 
 const getItemsNameASC = `-- name: GetItemsNameASC :many
-SELECT asset_id, market_hash_name, price, appid, time, image FROM items ORDER BY MARKET_HASH_NAME ASC
+SELECT asset_id, market_hash_name, price, appid, time, image 
+FROM items 
+WHERE MARKET_HASH_NAME LIKE ?1
+ORDER BY MARKET_HASH_NAME ASC
 `
 
-func (q *Queries) GetItemsNameASC(ctx context.Context) ([]Item, error) {
-	rows, err := q.db.QueryContext(ctx, getItemsNameASC)
+func (q *Queries) GetItemsNameASC(ctx context.Context, marketHashName string) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, getItemsNameASC, marketHashName)
 	if err != nil {
 		return nil, err
 	}
@@ -133,11 +136,14 @@ func (q *Queries) GetItemsNameASC(ctx context.Context) ([]Item, error) {
 }
 
 const getItemsNameDESC = `-- name: GetItemsNameDESC :many
-SELECT asset_id, market_hash_name, price, appid, time, image FROM items ORDER BY MARKET_HASH_NAME DESC
+SELECT asset_id, market_hash_name, price, appid, time, image 
+FROM items 
+WHERE MARKET_HASH_NAME LIKE ?1
+ORDER BY MARKET_HASH_NAME DESC
 `
 
-func (q *Queries) GetItemsNameDESC(ctx context.Context) ([]Item, error) {
-	rows, err := q.db.QueryContext(ctx, getItemsNameDESC)
+func (q *Queries) GetItemsNameDESC(ctx context.Context, marketHashName string) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, getItemsNameDESC, marketHashName)
 	if err != nil {
 		return nil, err
 	}
@@ -167,11 +173,14 @@ func (q *Queries) GetItemsNameDESC(ctx context.Context) ([]Item, error) {
 }
 
 const getItemsPriceASC = `-- name: GetItemsPriceASC :many
-SELECT asset_id, market_hash_name, price, appid, time, image FROM items ORDER BY price ASC
+SELECT asset_id, market_hash_name, price, appid, time, image 
+FROM items 
+WHERE MARKET_HASH_NAME LIKE ?1
+ORDER BY price ASC
 `
 
-func (q *Queries) GetItemsPriceASC(ctx context.Context) ([]Item, error) {
-	rows, err := q.db.QueryContext(ctx, getItemsPriceASC)
+func (q *Queries) GetItemsPriceASC(ctx context.Context, marketHashName string) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, getItemsPriceASC, marketHashName)
 	if err != nil {
 		return nil, err
 	}
@@ -201,11 +210,14 @@ func (q *Queries) GetItemsPriceASC(ctx context.Context) ([]Item, error) {
 }
 
 const getItemsPriceDESC = `-- name: GetItemsPriceDESC :many
-SELECT asset_id, market_hash_name, price, appid, time, image FROM items ORDER BY price DESC
+SELECT asset_id, market_hash_name, price, appid, time, image 
+FROM items 
+WHERE MARKET_HASH_NAME LIKE ?1
+ORDER BY price DESC
 `
 
-func (q *Queries) GetItemsPriceDESC(ctx context.Context) ([]Item, error) {
-	rows, err := q.db.QueryContext(ctx, getItemsPriceDESC)
+func (q *Queries) GetItemsPriceDESC(ctx context.Context, marketHashName string) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, getItemsPriceDESC, marketHashName)
 	if err != nil {
 		return nil, err
 	}
@@ -235,11 +247,14 @@ func (q *Queries) GetItemsPriceDESC(ctx context.Context) ([]Item, error) {
 }
 
 const getItemsTimeASC = `-- name: GetItemsTimeASC :many
-SELECT asset_id, market_hash_name, price, appid, time, image FROM items ORDER BY time ASC
+SELECT asset_id, market_hash_name, price, appid, time, image 
+FROM items 
+WHERE MARKET_HASH_NAME LIKE ?1
+ORDER BY time ASC
 `
 
-func (q *Queries) GetItemsTimeASC(ctx context.Context) ([]Item, error) {
-	rows, err := q.db.QueryContext(ctx, getItemsTimeASC)
+func (q *Queries) GetItemsTimeASC(ctx context.Context, marketHashName string) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, getItemsTimeASC, marketHashName)
 	if err != nil {
 		return nil, err
 	}
@@ -269,11 +284,14 @@ func (q *Queries) GetItemsTimeASC(ctx context.Context) ([]Item, error) {
 }
 
 const getItemsTimeDESC = `-- name: GetItemsTimeDESC :many
-SELECT asset_id, market_hash_name, price, appid, time, image FROM items ORDER BY time DESC
+SELECT asset_id, market_hash_name, price, appid, time, image 
+FROM items 
+WHERE MARKET_HASH_NAME LIKE ?1
+ORDER BY time DESC
 `
 
-func (q *Queries) GetItemsTimeDESC(ctx context.Context) ([]Item, error) {
-	rows, err := q.db.QueryContext(ctx, getItemsTimeDESC)
+func (q *Queries) GetItemsTimeDESC(ctx context.Context, marketHashName string) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, getItemsTimeDESC, marketHashName)
 	if err != nil {
 		return nil, err
 	}

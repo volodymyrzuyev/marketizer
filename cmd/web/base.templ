@@ -14,9 +14,12 @@ templ Base(user *custSql.User) {
 			<script src="assets/js/htmx.min.js"></script>
 			<script src="//unpkg.com/alpinejs" defer></script>
 		</head>
-		<body class="font-[Arial, sans-serif] text-white bg-bgColor flex flex-col items-center">
+		<body
+			class="font-[Arial, sans-serif] text-white bg-bgColor flex flex-col items-center"
+			x-data="{ sortBy: 'time', order: 'asc', search: '' }"
+		>
 			@nav(user)
-			<main class="mt-[130px] flex flex-col items-center w-full">
+			<main class=" mt-[130px] flex flex-col items-center w-full">
 				{ children... }
 			</main>
 			<footer>

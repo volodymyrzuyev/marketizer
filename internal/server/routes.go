@@ -108,7 +108,16 @@ func (s *Server) getItems(c echo.Context) error {
 		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
 	}
 
-	items, err := s.db.GetItems(orderBy[0], sortBy[0])
+	search, ok := params["search"]
+	if !ok {
+		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
+	}
+
+	if len(search) == 0 {
+		search = append(search, "")
+	}
+
+	items, err := s.db.GetItems(orderBy[0], sortBy[0], search[0])
 
 	if err != nil {
 		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
@@ -118,7 +127,7 @@ func (s *Server) getItems(c echo.Context) error {
 }
 
 func (s *Server) home(c echo.Context) error {
-	items, err := s.db.GetItems("asc", "time")
+	items, err := s.db.GetItems("asc", "time", "")
 	if err != nil {
 		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
 	}

@@ -22,22 +22,40 @@ VALUES
     (?1, ?2, ?3, ?4, ?5, ?6);
 
 -- name: GetItemsPriceDESC :many
-SELECT * FROM items ORDER BY price DESC;
+SELECT * 
+FROM items 
+WHERE MARKET_HASH_NAME LIKE ?1
+ORDER BY price DESC;
 
 -- name: GetItemsPriceASC :many
-SELECT * FROM items ORDER BY price ASC;
+SELECT * 
+FROM items 
+WHERE MARKET_HASH_NAME LIKE ?1
+ORDER BY price ASC;
 
 -- name: GetItemsNameDESC :many
-SELECT * FROM items ORDER BY MARKET_HASH_NAME DESC;
+SELECT * 
+FROM items 
+WHERE MARKET_HASH_NAME LIKE ?1
+ORDER BY MARKET_HASH_NAME DESC;
 
 -- name: GetItemsNameASC :many
-SELECT * FROM items ORDER BY MARKET_HASH_NAME ASC;
+SELECT * 
+FROM items 
+WHERE MARKET_HASH_NAME LIKE ?1
+ORDER BY MARKET_HASH_NAME ASC;
 
 -- name: GetItemsTimeDESC :many
-SELECT * FROM items ORDER BY time DESC;
+SELECT * 
+FROM items 
+WHERE MARKET_HASH_NAME LIKE ?1
+ORDER BY time DESC;
 
 -- name: GetItemsTimeASC :many
-SELECT * FROM items ORDER BY time ASC;
+SELECT * 
+FROM items 
+WHERE MARKET_HASH_NAME LIKE ?1
+ORDER BY time ASC;
 
 -- name: Create_table1 :exec
 CREATE TABLE IF NOT EXISTS users(

@@ -10,7 +10,7 @@ templ Items(items []custSql.Item) {
 		hx-trigger="every 10s, loadItems from:body"
 		hx-swap="outerHTML"
 		hx-swap-oob="true"
-		x-bind:hx-vals="JSON.stringify({ sortBy: sortBy, order: order })"
+		x-bind:hx-vals="JSON.stringify({ sortBy: sortBy, order: order, search: search })"
 	>
 		for _, itemLine := range items {
 			@item(itemLine)
