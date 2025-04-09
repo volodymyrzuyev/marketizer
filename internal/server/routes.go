@@ -90,7 +90,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 func (s *Server) getItems(c echo.Context) error {
 	in := c.Request().Header.Get("Hx-Request")
-	if in != "[true]" {
+	if in != "true" {
 		return c.Redirect(302, "/")
 	}
 
