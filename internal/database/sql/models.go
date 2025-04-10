@@ -10,8 +10,8 @@ import (
 
 type Follow struct {
 	ID             int64
-	Email          sql.NullInt64
-	MarketHashName sql.NullString
+	Email          string
+	MarketHashName string
 }
 
 type Item struct {
@@ -21,6 +21,12 @@ type Item struct {
 	Appid          int64
 	Time           int64
 	Image          string
+}
+
+type Notification struct {
+	ID      int64
+	AssetID int64
+	Email   string
 }
 
 type User struct {

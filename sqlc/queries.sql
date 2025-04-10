@@ -57,6 +57,36 @@ FROM items
 WHERE MARKET_HASH_NAME LIKE ?1
 ORDER BY time ASC;
 
+
+-- name: GetItemsToNotify :many
+SELECT 
+    i.ASSET_ID
+FROM items i, follows f
+WHERE i.MARKET_HASH_NAME = f.MARKET_HASH_NAME 
+    AND f.EMAIL = ?1 
+    AND NOT EXISTS (
+        SELECT n.ID
+        FROM notifications n 
+        WHERE n.ASSET_ID = i.ASSET_ID);
+
+-- name: SetItemAsNotified :exec
+INSERT INTO 
+    notifications (ASSET_ID, EMAIL)
+VALUES
+    (?1, ?2);
+
+-- name: AddToFollows :exec
+INSERT INTO
+    follows (EMAIL, MARKET_HASH_NAME)
+VALUES
+    (?1, ?2);
+
+-- name: GetFollows :many
+SELECT MARKET_HASH_NAME
+FROM follows
+WHERE EMAIL = ?1;
+
+
 -- name: Create_table1 :exec
 CREATE TABLE IF NOT EXISTS users(
     NAME TEXT,
@@ -76,7 +106,14 @@ CREATE TABLE IF NOT EXISTS items(
     PRICE INTEGER,
     APPID INTEGER,
     TIME INTEGER,
-    IMAGE TEXT NOT NULL
+    IMAGE TEXT,
+    NOTIFIED BOOLEAN
 );
 
+-- name: Create_table4 :exec
+CREATE TABLE IF NOT EXISTS notifications(
+    ID INTEGER PRIMARY KEY,
+    ASSET_ID INTEGER,
+    EMAIL TEXT
+);
 

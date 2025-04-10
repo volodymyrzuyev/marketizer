@@ -2,9 +2,9 @@ package web
 
 import "github.com/volodymyrzuyev/marketizer/internal/database/sql"
 
-templ ItemsRender(items []custSql.Item, user *custSql.User) {
+templ ItemsRender(items []custSql.Item, user *custSql.User, toNotify map[int64]bool, favorites map[string]bool) {
 	@Base(user) {
 		@buttons()
-		@Items(items)
+		@Items(items, toNotify, favorites)
 	}
 }

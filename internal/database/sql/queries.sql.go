@@ -38,6 +38,23 @@ func (q *Queries) AddAsset(ctx context.Context, arg AddAssetParams) error {
 	return err
 }
 
+const addToFollows = `-- name: AddToFollows :exec
+INSERT INTO
+    follows (EMAIL, MARKET_HASH_NAME)
+VALUES
+    (?1, ?2)
+`
+
+type AddToFollowsParams struct {
+	Email          string
+	MarketHashName string
+}
+
+func (q *Queries) AddToFollows(ctx context.Context, arg AddToFollowsParams) error {
+	_, err := q.db.ExecContext(ctx, addToFollows, arg.Email, arg.MarketHashName)
+	return err
+}
+
 const add_User = `-- name: Add_User :exec
 INSERT INTO 
     users (NAME, EMAIL, PASSWORD)
@@ -89,13 +106,56 @@ CREATE TABLE IF NOT EXISTS items(
     PRICE INTEGER,
     APPID INTEGER,
     TIME INTEGER,
-    IMAGE TEXT NOT NULL
+    IMAGE TEXT,
+    NOTIFIED BOOLEAN
 )
 `
 
 func (q *Queries) Create_table3(ctx context.Context) error {
 	_, err := q.db.ExecContext(ctx, create_table3)
 	return err
+}
+
+const create_table4 = `-- name: Create_table4 :exec
+CREATE TABLE IF NOT EXISTS notifications(
+    ID INTEGER PRIMARY KEY,
+    ASSET_ID INTEGER,
+    EMAIL TEXT
+)
+`
+
+func (q *Queries) Create_table4(ctx context.Context) error {
+	_, err := q.db.ExecContext(ctx, create_table4)
+	return err
+}
+
+const getFollows = `-- name: GetFollows :many
+SELECT MARKET_HASH_NAME
+FROM follows
+WHERE EMAIL = ?1
+`
+
+func (q *Queries) GetFollows(ctx context.Context, email string) ([]string, error) {
+	rows, err := q.db.QueryContext(ctx, getFollows, email)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []string
+	for rows.Next() {
+		var market_hash_name string
+		if err := rows.Scan(&market_hash_name); err != nil {
+			return nil, err
+		}
+		items = append(items, market_hash_name)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const getItemsNameASC = `-- name: GetItemsNameASC :many
@@ -320,6 +380,41 @@ func (q *Queries) GetItemsTimeDESC(ctx context.Context, marketHashName string) (
 	return items, nil
 }
 
+const getItemsToNotify = `-- name: GetItemsToNotify :many
+SELECT 
+    i.ASSET_ID
+FROM items i, follows f
+WHERE i.MARKET_HASH_NAME = f.MARKET_HASH_NAME 
+    AND f.EMAIL = ?1 
+    AND NOT EXISTS (
+        SELECT n.ID
+        FROM notifications n 
+        WHERE n.ASSET_ID = i.ASSET_ID)
+`
+
+func (q *Queries) GetItemsToNotify(ctx context.Context, email string) ([]int64, error) {
+	rows, err := q.db.QueryContext(ctx, getItemsToNotify, email)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []int64
+	for rows.Next() {
+		var asset_id int64
+		if err := rows.Scan(&asset_id); err != nil {
+			return nil, err
+		}
+		items = append(items, asset_id)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const get_All_Users = `-- name: Get_All_Users :many
 SELECT
     name, email, password
@@ -361,4 +456,21 @@ func (q *Queries) Get_User(ctx context.Context, email string) (User, error) {
 	var i User
 	err := row.Scan(&i.Name, &i.Email, &i.Password)
 	return i, err
+}
+
+const setItemAsNotified = `-- name: SetItemAsNotified :exec
+INSERT INTO 
+    notifications (ASSET_ID, EMAIL)
+VALUES
+    (?1, ?2)
+`
+
+type SetItemAsNotifiedParams struct {
+	AssetID int64
+	Email   string
+}
+
+func (q *Queries) SetItemAsNotified(ctx context.Context, arg SetItemAsNotifiedParams) error {
+	_, err := q.db.ExecContext(ctx, setItemAsNotified, arg.AssetID, arg.Email)
+	return err
 }

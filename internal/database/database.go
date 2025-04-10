@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -22,6 +23,9 @@ type Service interface {
 	AddUser(email, password, name string) error
 	AddItems(listingInfo []byte, assetInfo []byte)
 	GetItems(orderBy, sortBy, searchString string) ([]custSql.Item, error)
+	GetItemsToNotify(email string) (map[int64]bool, error)
+	AddToFollows(email, marketHashName string, assetId int64) error
+	GetFollows(email string) (map[string]bool, error)
 	// Close terminates the database connection.
 	// It returns an error if the connection cannot be closed.
 	Close() error
@@ -56,7 +60,69 @@ func New() Service {
 	dbInstance.q.Create_table1(context.TODO())
 	dbInstance.q.Create_table2(context.TODO())
 	dbInstance.q.Create_table3(context.TODO())
+	dbInstance.q.Create_table4(context.TODO())
 	return dbInstance
+}
+
+func (s *service) AddToFollows(email, marketHashName string, assetID int64) error {
+	arg := custSql.AddToFollowsParams{
+		Email:          email,
+		MarketHashName: marketHashName,
+	}
+
+	arg2 := custSql.SetItemAsNotifiedParams{
+		AssetID: assetID,
+		Email:   email,
+	}
+	err := s.q.SetItemAsNotified(context.TODO(), arg2)
+	if err != nil {
+		return err
+	}
+
+	return s.q.AddToFollows(context.TODO(), arg)
+}
+
+func (s *service) GetFollows(email string) (map[string]bool, error) {
+	m, err := s.q.GetFollows(context.TODO(), email)
+	if err != nil || errors.Is(err, sql.ErrNoRows) {
+		return nil, err
+	}
+
+	retMap := make(map[string]bool)
+
+	for _, n := range m {
+		retMap[n] = true
+	}
+
+	return retMap, nil
+}
+
+func (s *service) GetItemsToNotify(email string) (map[int64]bool, error) {
+	assetsIDs, err := s.q.GetItemsToNotify(context.TODO(), email)
+	if err != nil && errors.Is(err, sql.ErrNoRows) {
+		return nil, err
+	}
+
+	retMap := make(map[int64]bool)
+
+	tx, err := s.db.BeginTx(context.TODO(), nil)
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
+
+	p := s.q.WithTx(tx)
+
+	for _, i := range assetsIDs {
+		retMap[i] = true
+		args := custSql.SetItemAsNotifiedParams{
+			AssetID: i,
+			Email:   email,
+		}
+		p.SetItemAsNotified(context.TODO(), args)
+	}
+
+	return retMap, tx.Commit()
 }
 
 func (s *service) GetUser(email string) (custSql.User, error) {

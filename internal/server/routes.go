@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"net/http"
+	"strconv"
 
 	"fmt"
 	"log"
@@ -80,12 +81,41 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	e.GET("/items", s.getItems, s.AuthMiddleware)
 
+	e.GET("/favorite", s.fovoriteHandler, s.AuthMiddleware)
+
 	e.POST("/login", s.loginHandler)
 	e.POST("/register", s.register)
 
 	e.GET("/websocket", s.websocketHandler)
 
 	return e
+}
+
+func (s *Server) fovoriteHandler(c echo.Context) error {
+	user, err := s.db.GetUser(c.Get("user").(string))
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	params := c.Request().URL.Query()
+	itemName, ok := params["itemName"]
+	if len(itemName) != 1 || !ok {
+		return echo.ErrInternalServerError
+	}
+
+	assets, ok := params["asset"]
+	if len(assets) != 1 || !ok {
+		return echo.ErrInternalServerError
+	}
+
+	asset, err := strconv.ParseInt(assets[0], 10, 64)
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	name := itemName[0]
+
+	return s.db.AddToFollows(user.Email, name, asset)
 }
 
 func (s *Server) getItems(c echo.Context) error {
@@ -95,8 +125,6 @@ func (s *Server) getItems(c echo.Context) error {
 	}
 
 	params := c.Request().URL.Query()
-
-	fmt.Println("Params", params)
 
 	sortBy, ok := params["sortBy"]
 	if !ok || len(sortBy) != 1 {
@@ -123,7 +151,22 @@ func (s *Server) getItems(c echo.Context) error {
 		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
 	}
 
-	return templ.Handler(web.Items(items)).Component.Render(context.TODO(), c.Response().Writer)
+	user, err := s.db.GetUser(c.Get("user").(string))
+	if err != nil {
+		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
+	}
+
+	m, err := s.db.GetItemsToNotify(user.Email)
+	if err != nil {
+		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
+	}
+
+	f, err := s.db.GetFollows(user.Email)
+	if err != nil {
+		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
+	}
+
+	return templ.Handler(web.Items(items, m, f)).Component.Render(context.TODO(), c.Response().Writer)
 }
 
 func (s *Server) home(c echo.Context) error {
@@ -137,7 +180,17 @@ func (s *Server) home(c echo.Context) error {
 		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
 	}
 
-	return templ.Handler(web.ItemsRender(items, &user)).Component.Render(context.TODO(), c.Response().Writer)
+	m, err := s.db.GetItemsToNotify(user.Email)
+	if err != nil {
+		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
+	}
+
+	f, err := s.db.GetFollows(user.Email)
+	if err != nil {
+		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
+	}
+
+	return templ.Handler(web.ItemsRender(items, &user, m, f)).Component.Render(context.TODO(), c.Response().Writer)
 }
 
 func (s *Server) loginHandler(c echo.Context) error {

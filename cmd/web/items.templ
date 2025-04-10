@@ -2,7 +2,7 @@ package web
 
 import "github.com/volodymyrzuyev/marketizer/internal/database/sql"
 
-templ Items(items []custSql.Item) {
+templ Items(items []custSql.Item, toNotify map[int64]bool, favorites map[string]bool) {
 	<div
 		class="flex flex-wrap"
 		id="content"
@@ -13,7 +13,7 @@ templ Items(items []custSql.Item) {
 		x-bind:hx-vals="JSON.stringify({ sortBy: sortBy, order: order, search: search })"
 	>
 		for _, itemLine := range items {
-			@item(itemLine)
+			@item(itemLine, toNotify, favorites)
 		}
 	</div>
 }
