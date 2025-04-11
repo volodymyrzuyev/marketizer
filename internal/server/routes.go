@@ -83,6 +83,10 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	e.GET("/favorite", s.fovoriteHandler, s.AuthMiddleware)
 
+	e.GET("/profile", s.profile, s.AuthMiddleware)
+
+	e.GET("/profileItems", s.getFollows, s.AuthMiddleware)
+
 	e.POST("/login", s.loginHandler)
 	e.POST("/register", s.register)
 
@@ -116,6 +120,81 @@ func (s *Server) fovoriteHandler(c echo.Context) error {
 	name := itemName[0]
 
 	return s.db.AddToFollows(user.Email, name, asset)
+}
+
+func (s *Server) profile(c echo.Context) error {
+
+	user, err := s.db.GetUser(c.Get("user").(string))
+	if err != nil {
+		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
+	}
+
+	items, err := s.db.GetFollowItems("asc", "time", "", user.Email)
+	if err != nil {
+		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
+	}
+
+	m, err := s.db.GetItemsToNotify(user.Email)
+	if err != nil {
+		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
+	}
+
+	f, err := s.db.GetFollows(user.Email)
+	if err != nil {
+		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
+	}
+
+	return templ.Handler(web.Profile(items, &user, m, f)).Component.Render(context.TODO(), c.Response().Writer)
+}
+
+func (s *Server) getFollows(c echo.Context) error {
+	in := c.Request().Header.Get("Hx-Request")
+	if in != "true" {
+		return c.Redirect(302, "/")
+	}
+
+	params := c.Request().URL.Query()
+
+	sortBy, ok := params["sortBy"]
+	if !ok || len(sortBy) != 1 {
+		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
+	}
+
+	orderBy, ok := params["order"]
+	if !ok || len(orderBy) != 1 {
+		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
+	}
+
+	search, ok := params["search"]
+	if !ok {
+		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
+	}
+
+	if len(search) == 0 {
+		search = append(search, "")
+	}
+
+	user, err := s.db.GetUser(c.Get("user").(string))
+	if err != nil {
+		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
+	}
+
+	items, err := s.db.GetFollowItems(orderBy[0], sortBy[0], search[0], user.Email)
+	if err != nil {
+		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
+	}
+
+	m, err := s.db.GetItemsToNotify(user.Email)
+	if err != nil {
+		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
+	}
+
+	f, err := s.db.GetFollows(user.Email)
+	if err != nil {
+		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
+	}
+
+	return templ.Handler(web.Items(items, m, f, "/profileItems")).Component.Render(context.TODO(), c.Response().Writer)
 }
 
 func (s *Server) getItems(c echo.Context) error {
@@ -166,7 +245,7 @@ func (s *Server) getItems(c echo.Context) error {
 		return templ.Handler(web.InternalError()).Component.Render(context.TODO(), c.Response().Writer)
 	}
 
-	return templ.Handler(web.Items(items, m, f)).Component.Render(context.TODO(), c.Response().Writer)
+	return templ.Handler(web.Items(items, m, f, "/items")).Component.Render(context.TODO(), c.Response().Writer)
 }
 
 func (s *Server) home(c echo.Context) error {

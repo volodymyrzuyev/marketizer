@@ -26,6 +26,7 @@ type Service interface {
 	GetItemsToNotify(email string) (map[int64]bool, error)
 	AddToFollows(email, marketHashName string, assetId int64) error
 	GetFollows(email string) (map[string]bool, error)
+	GetFollowItems(orderBy, sortBy, searchString, email string) ([]custSql.Item, error)
 	// Close terminates the database connection.
 	// It returns an error if the connection cannot be closed.
 	Close() error
@@ -95,6 +96,45 @@ func (s *service) GetFollows(email string) (map[string]bool, error) {
 	}
 
 	return retMap, nil
+}
+
+func (s *service) GetFollowItems(orderBy, sortBy, searchString, email string) ([]custSql.Item, error) {
+	args := custSql.GetFollowItemsNameASCParams{
+		Email:          email,
+		MarketHashName: "%" + searchString + "%",
+	}
+	var err error
+	var items []custSql.Item
+	switch orderBy {
+	case "asc":
+		switch sortBy {
+		case "time":
+			items, err = s.q.GetFollowItemsTimeDSC(context.TODO(), custSql.GetFollowItemsTimeDSCParams(args))
+		case "price":
+			items, err = s.q.GetFollowItemsPriceASC(context.TODO(), custSql.GetFollowItemsPriceASCParams(args))
+		case "name":
+			items, err = s.q.GetFollowItemsNameASC(context.TODO(), args)
+		default:
+			items, err = []custSql.Item{}, fmt.Errorf("Invalid ordering")
+		}
+	case "dsc":
+		switch sortBy {
+		case "time":
+			items, err = s.q.GetFollowItemsTimeASC(context.TODO(), custSql.GetFollowItemsTimeASCParams(args))
+		case "price":
+			items, err = s.q.GetFollowItemsPriceDSC(context.TODO(), custSql.GetFollowItemsPriceDSCParams(args))
+		case "name":
+			items, err = s.q.GetFollowItemsNameDSC(context.TODO(), custSql.GetFollowItemsNameDSCParams(args))
+		default:
+			items, err = []custSql.Item{}, fmt.Errorf("Invalid ordering")
+		}
+	}
+
+	if err != nil || errors.Is(err, sql.ErrNoRows) {
+		return nil, err
+	}
+
+	return items, nil
 }
 
 func (s *service) GetItemsToNotify(email string) (map[int64]bool, error) {

@@ -86,6 +86,59 @@ SELECT MARKET_HASH_NAME
 FROM follows
 WHERE EMAIL = ?1;
 
+-- name: GetFollowItemsPriceASC :many
+SELECT items.*
+FROM items, follows
+WHERE items.MARKET_HASH_NAME = follows.MARKET_HASH_NAME 
+    AND follows.EMAIL = ?1 
+    AND items.MARKET_HASH_NAME LIKE ?2
+GROUP BY items.MARKET_HASH_NAME
+ORDER BY price ASC;
+
+-- name: GetFollowItemsPriceDSC :many
+SELECT items.*
+FROM items, follows
+WHERE items.MARKET_HASH_NAME = follows.MARKET_HASH_NAME 
+    AND follows.EMAIL = ?1 
+    AND items.MARKET_HASH_NAME LIKE ?2
+GROUP BY items.MARKET_HASH_NAME
+ORDER BY price DESC;
+
+-- name: GetFollowItemsNameASC :many
+SELECT items.*
+FROM items, follows
+WHERE items.MARKET_HASH_NAME = follows.MARKET_HASH_NAME 
+    AND follows.EMAIL = ?1 
+    AND items.MARKET_HASH_NAME LIKE ?2
+GROUP BY items.MARKET_HASH_NAME
+ORDER BY items.MARKET_HASH_NAME ASC;
+
+-- name: GetFollowItemsNameDSC :many
+SELECT items.*
+FROM items, follows
+WHERE items.MARKET_HASH_NAME = follows.MARKET_HASH_NAME 
+    AND follows.EMAIL = ?1 
+    AND items.MARKET_HASH_NAME LIKE ?2
+GROUP BY items.MARKET_HASH_NAME
+ORDER BY items.MARKET_HASH_NAME DESC;
+
+-- name: GetFollowItemsTimeDSC :many
+SELECT items.*
+FROM items, follows
+WHERE items.MARKET_HASH_NAME = follows.MARKET_HASH_NAME 
+    AND follows.EMAIL = ?1 
+    AND items.MARKET_HASH_NAME LIKE ?2
+GROUP BY items.MARKET_HASH_NAME
+ORDER BY time ASC;
+
+-- name: GetFollowItemsTimeASC :many
+SELECT items.*
+FROM items, follows
+WHERE items.MARKET_HASH_NAME = follows.MARKET_HASH_NAME 
+    AND follows.EMAIL = ?1 
+    AND items.MARKET_HASH_NAME LIKE ?2
+GROUP BY items.MARKET_HASH_NAME
+ORDER BY time DESC;
 
 -- name: Create_table1 :exec
 CREATE TABLE IF NOT EXISTS users(

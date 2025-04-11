@@ -129,6 +129,276 @@ func (q *Queries) Create_table4(ctx context.Context) error {
 	return err
 }
 
+const getFollowItemsNameASC = `-- name: GetFollowItemsNameASC :many
+SELECT items.asset_id, items.market_hash_name, items.price, items.appid, items.time, items.image
+FROM items, follows
+WHERE items.MARKET_HASH_NAME = follows.MARKET_HASH_NAME 
+    AND follows.EMAIL = ?1 
+    AND items.MARKET_HASH_NAME LIKE ?2
+GROUP BY items.MARKET_HASH_NAME
+ORDER BY items.MARKET_HASH_NAME ASC
+`
+
+type GetFollowItemsNameASCParams struct {
+	Email          string
+	MarketHashName string
+}
+
+func (q *Queries) GetFollowItemsNameASC(ctx context.Context, arg GetFollowItemsNameASCParams) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, getFollowItemsNameASC, arg.Email, arg.MarketHashName)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Item
+	for rows.Next() {
+		var i Item
+		if err := rows.Scan(
+			&i.AssetID,
+			&i.MarketHashName,
+			&i.Price,
+			&i.Appid,
+			&i.Time,
+			&i.Image,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getFollowItemsNameDSC = `-- name: GetFollowItemsNameDSC :many
+SELECT items.asset_id, items.market_hash_name, items.price, items.appid, items.time, items.image
+FROM items, follows
+WHERE items.MARKET_HASH_NAME = follows.MARKET_HASH_NAME 
+    AND follows.EMAIL = ?1 
+    AND items.MARKET_HASH_NAME LIKE ?2
+GROUP BY items.MARKET_HASH_NAME
+ORDER BY items.MARKET_HASH_NAME DESC
+`
+
+type GetFollowItemsNameDSCParams struct {
+	Email          string
+	MarketHashName string
+}
+
+func (q *Queries) GetFollowItemsNameDSC(ctx context.Context, arg GetFollowItemsNameDSCParams) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, getFollowItemsNameDSC, arg.Email, arg.MarketHashName)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Item
+	for rows.Next() {
+		var i Item
+		if err := rows.Scan(
+			&i.AssetID,
+			&i.MarketHashName,
+			&i.Price,
+			&i.Appid,
+			&i.Time,
+			&i.Image,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getFollowItemsPriceASC = `-- name: GetFollowItemsPriceASC :many
+SELECT items.asset_id, items.market_hash_name, items.price, items.appid, items.time, items.image
+FROM items, follows
+WHERE items.MARKET_HASH_NAME = follows.MARKET_HASH_NAME 
+    AND follows.EMAIL = ?1 
+    AND items.MARKET_HASH_NAME LIKE ?2
+GROUP BY items.MARKET_HASH_NAME
+ORDER BY price ASC
+`
+
+type GetFollowItemsPriceASCParams struct {
+	Email          string
+	MarketHashName string
+}
+
+func (q *Queries) GetFollowItemsPriceASC(ctx context.Context, arg GetFollowItemsPriceASCParams) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, getFollowItemsPriceASC, arg.Email, arg.MarketHashName)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Item
+	for rows.Next() {
+		var i Item
+		if err := rows.Scan(
+			&i.AssetID,
+			&i.MarketHashName,
+			&i.Price,
+			&i.Appid,
+			&i.Time,
+			&i.Image,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getFollowItemsPriceDSC = `-- name: GetFollowItemsPriceDSC :many
+SELECT items.asset_id, items.market_hash_name, items.price, items.appid, items.time, items.image
+FROM items, follows
+WHERE items.MARKET_HASH_NAME = follows.MARKET_HASH_NAME 
+    AND follows.EMAIL = ?1 
+    AND items.MARKET_HASH_NAME LIKE ?2
+GROUP BY items.MARKET_HASH_NAME
+ORDER BY price DESC
+`
+
+type GetFollowItemsPriceDSCParams struct {
+	Email          string
+	MarketHashName string
+}
+
+func (q *Queries) GetFollowItemsPriceDSC(ctx context.Context, arg GetFollowItemsPriceDSCParams) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, getFollowItemsPriceDSC, arg.Email, arg.MarketHashName)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Item
+	for rows.Next() {
+		var i Item
+		if err := rows.Scan(
+			&i.AssetID,
+			&i.MarketHashName,
+			&i.Price,
+			&i.Appid,
+			&i.Time,
+			&i.Image,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getFollowItemsTimeASC = `-- name: GetFollowItemsTimeASC :many
+SELECT items.asset_id, items.market_hash_name, items.price, items.appid, items.time, items.image
+FROM items, follows
+WHERE items.MARKET_HASH_NAME = follows.MARKET_HASH_NAME 
+    AND follows.EMAIL = ?1 
+    AND items.MARKET_HASH_NAME LIKE ?2
+GROUP BY items.MARKET_HASH_NAME
+ORDER BY time DESC
+`
+
+type GetFollowItemsTimeASCParams struct {
+	Email          string
+	MarketHashName string
+}
+
+func (q *Queries) GetFollowItemsTimeASC(ctx context.Context, arg GetFollowItemsTimeASCParams) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, getFollowItemsTimeASC, arg.Email, arg.MarketHashName)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Item
+	for rows.Next() {
+		var i Item
+		if err := rows.Scan(
+			&i.AssetID,
+			&i.MarketHashName,
+			&i.Price,
+			&i.Appid,
+			&i.Time,
+			&i.Image,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getFollowItemsTimeDSC = `-- name: GetFollowItemsTimeDSC :many
+SELECT items.asset_id, items.market_hash_name, items.price, items.appid, items.time, items.image
+FROM items, follows
+WHERE items.MARKET_HASH_NAME = follows.MARKET_HASH_NAME 
+    AND follows.EMAIL = ?1 
+    AND items.MARKET_HASH_NAME LIKE ?2
+GROUP BY items.MARKET_HASH_NAME
+ORDER BY time ASC
+`
+
+type GetFollowItemsTimeDSCParams struct {
+	Email          string
+	MarketHashName string
+}
+
+func (q *Queries) GetFollowItemsTimeDSC(ctx context.Context, arg GetFollowItemsTimeDSCParams) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, getFollowItemsTimeDSC, arg.Email, arg.MarketHashName)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Item
+	for rows.Next() {
+		var i Item
+		if err := rows.Scan(
+			&i.AssetID,
+			&i.MarketHashName,
+			&i.Price,
+			&i.Appid,
+			&i.Time,
+			&i.Image,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getFollows = `-- name: GetFollows :many
 SELECT MARKET_HASH_NAME
 FROM follows
