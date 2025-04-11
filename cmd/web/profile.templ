@@ -2,10 +2,15 @@ package web
 
 import "github.com/volodymyrzuyev/marketizer/internal/database/sql"
 
-templ Profile(items []custSql.Item) {
-<div class="flex flex-wrap" id="content" hx-get="/items" hx-trigger="every 10s" hx-target="#content">
-    // for _, itemLine := range items {
-    // @item(itemLine)
-    // }
-</div>
+templ Profile(items []custSql.Item, user *custSql.User, toNotify map[int64]bool, favorites map[string]bool) {
+    @Base(user) {
+        <h2 class="font-bold text-white text-center m-4">Favorited Items</h2>
+        if len(favorites) > 0 {
+            @buttons()
+		    @Items(items, toNotify, favorites)
+        }
+        else {
+            <p class="text-white text-center">You have not favorited any items.</p>
+        }
+	}
 }
