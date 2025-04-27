@@ -728,6 +728,21 @@ func (q *Queries) Get_User(ctx context.Context, email string) (User, error) {
 	return i, err
 }
 
+const removeFromFollows = `-- name: RemoveFromFollows :exec
+DELETE FROM follows
+WHERE EMAIL = ?1 AND MARKET_HASH_NAME = ?2
+`
+
+type RemoveFromFollowsParams struct {
+	Email          string
+	MarketHashName string
+}
+
+func (q *Queries) RemoveFromFollows(ctx context.Context, arg RemoveFromFollowsParams) error {
+	_, err := q.db.ExecContext(ctx, removeFromFollows, arg.Email, arg.MarketHashName)
+	return err
+}
+
 const setItemAsNotified = `-- name: SetItemAsNotified :exec
 INSERT INTO 
     notifications (ASSET_ID, EMAIL)
@@ -742,5 +757,20 @@ type SetItemAsNotifiedParams struct {
 
 func (q *Queries) SetItemAsNotified(ctx context.Context, arg SetItemAsNotifiedParams) error {
 	_, err := q.db.ExecContext(ctx, setItemAsNotified, arg.AssetID, arg.Email)
+	return err
+}
+
+const unsetItemAsNotified = `-- name: UnsetItemAsNotified :exec
+DELETE FROM notifications 
+WHERE ASSET_ID = ?1 AND EMAIL = ?2
+`
+
+type UnsetItemAsNotifiedParams struct {
+	AssetID int64
+	Email   string
+}
+
+func (q *Queries) UnsetItemAsNotified(ctx context.Context, arg UnsetItemAsNotifiedParams) error {
+	_, err := q.db.ExecContext(ctx, unsetItemAsNotified, arg.AssetID, arg.Email)
 	return err
 }
