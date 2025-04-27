@@ -25,6 +25,7 @@ type Service interface {
 	GetItems(orderBy, sortBy, searchString string) ([]custSql.Item, error)
 	GetItemsToNotify(email string) (map[int64]bool, error)
 	AddToFollows(email, marketHashName string, assetId int64) error
+	RemoveFromFollows(email, marketHashName string, assetId int64) error
 	GetFollows(email string) (map[string]bool, error)
 	GetFollowItems(orderBy, sortBy, searchString, email string) ([]custSql.Item, error)
 	// Close terminates the database connection.
@@ -82,7 +83,29 @@ func (s *service) AddToFollows(email, marketHashName string, assetID int64) erro
 
 	return s.q.AddToFollows(context.TODO(), arg)
 }
+func (s *service) RemoveFromFollows(email, marketHashName string, assetID int64) error {
+	args := custSql.RemoveFromFollowsParams{
+		Email:          email,
+		MarketHashName: marketHashName,
+	}
 
+	//Mark the item as not notified
+	notifyArgs := custSql.UnsetItemAsNotifiedParams{
+		AssetID: assetID,
+		Email:   email,
+	}
+
+	err := s.q.RemoveFromFollows(context.TODO(), args)
+	if err != nil {
+		return err
+	}
+
+	err = s.q.UnsetItemAsNotified(context.TODO(), notifyArgs)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 func (s *service) GetFollows(email string) (map[string]bool, error) {
 	m, err := s.q.GetFollows(context.TODO(), email)
 	if err != nil || errors.Is(err, sql.ErrNoRows) {

@@ -11,8 +11,11 @@ func getCommunityMarketLink(a int64, n string) string {
 return fmt.Sprintf("https://steamcommunity.com/market/listings/%v/%v", a, n)
 }
 
-func getFavoriteLink(s string, d int64) string {
-return fmt.Sprintf("fetch('/favorite?itemName=%s&asset=%d')", url.QueryEscape(s), d)
+func getFavoriteLink(s string, d int64, isFavorite bool) string {
+	if isFavorite {
+		return fmt.Sprintf("fetch('/favorite?itemName=%s&asset=%d', { method: 'DELETE' })", url.QueryEscape(s), d)
+	}
+	return fmt.Sprintf("fetch('/favorite?itemName=%s&asset=%d', { method: 'POST' })", url.QueryEscape(s), d)
 }
 
 templ item(item custSql.Item, toNotify map[int64]bool, favorites map[string]bool) {
@@ -72,7 +75,7 @@ templ item(item custSql.Item, toNotify map[int64]bool, favorites map[string]bool
 	</h2>
 	<!--Favorite button on second column, thrid row-->
 	<button class="bg-bgColor p-[5%] text-[80%] row-start-3 col-start-2 rounded-xl hover:bg-highlightHover flex items-center justify-around overflow-hidden"
-		@click={ getFavoriteLink(item.MarketHashName, item.AssetID)+ "; setTimeout(() => { htmx.trigger('body', 'loadItems'); }, 0);" }>
+		@click={ getFavoriteLink(item.MarketHashName, item.AssetID, favorites[item.MarketHashName])+ "; setTimeout(() => { htmx.trigger('body', 'loadItems'); }, 0);" }>
 		<p class="text-[100%] text-center">Favorite</p>
 		if t, ok := favorites[item.MarketHashName]; ok && t {
 		<img class="w-[20%] object-contain" src="./assets/icons/stargold.png" alt="Image of a gold star" />

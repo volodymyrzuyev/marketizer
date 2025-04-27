@@ -75,11 +75,19 @@ INSERT INTO
 VALUES
     (?1, ?2);
 
+-- name: UnsetItemAsNotified :exec
+DELETE FROM notifications 
+WHERE ASSET_ID = ?1 AND EMAIL = ?2;
+
 -- name: AddToFollows :exec
 INSERT INTO
     follows (EMAIL, MARKET_HASH_NAME)
 VALUES
     (?1, ?2);
+    
+-- name: RemoveFromFollows :exec
+DELETE FROM follows
+WHERE EMAIL = ?1 AND MARKET_HASH_NAME = ?2;
 
 -- name: GetFollows :many
 SELECT MARKET_HASH_NAME

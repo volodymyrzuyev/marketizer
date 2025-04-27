@@ -81,7 +81,9 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	e.GET("/items", s.getItems, s.AuthMiddleware)
 
-	e.GET("/favorite", s.fovoriteHandler, s.AuthMiddleware)
+	e.POST("/favorite", s.favoriteHandler, s.AuthMiddleware)
+
+	e.DELETE("/favorite", s.unfavoriteHandler, s.AuthMiddleware)
 
 	e.GET("/profile", s.profile, s.AuthMiddleware)
 
@@ -95,7 +97,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	return e
 }
 
-func (s *Server) fovoriteHandler(c echo.Context) error {
+func (s *Server) favoriteHandler(c echo.Context) error {
 	user, err := s.db.GetUser(c.Get("user").(string))
 	if err != nil {
 		return echo.ErrInternalServerError
@@ -120,6 +122,33 @@ func (s *Server) fovoriteHandler(c echo.Context) error {
 	name := itemName[0]
 
 	return s.db.AddToFollows(user.Email, name, asset)
+}
+
+func (s *Server) unfavoriteHandler(c echo.Context) error {
+	user, err := s.db.GetUser(c.Get("user").(string))
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	params := c.Request().URL.Query()
+	itemName, ok := params["itemName"]
+	if len(itemName) != 1 || !ok {
+		return echo.ErrInternalServerError
+	}
+
+	assets, ok := params["asset"]
+	if len(assets) != 1 || !ok {
+		return echo.ErrInternalServerError
+	}
+
+	asset, err := strconv.ParseInt(assets[0], 10, 64)
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	name := itemName[0]
+
+	return s.db.RemoveFromFollows(user.Email, name, asset)
 }
 
 func (s *Server) profile(c echo.Context) error {
